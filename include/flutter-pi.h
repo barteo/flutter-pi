@@ -422,6 +422,7 @@ struct flutterpi {
 		char *app_elf_path;
 		void *app_elf_handle;
 		char *icu_data_path;
+		char *persistent_cache_path;
 
 		int engine_argc;
 		char **engine_argv;

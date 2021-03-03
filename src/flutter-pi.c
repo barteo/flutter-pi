@@ -1787,7 +1787,7 @@ static int init_application(void) {
 		.root_isolate_create_callback = NULL,
 		.update_semantics_node_callback = NULL,
 		.update_semantics_custom_action_callback = NULL,
-		.persistent_cache_path = NULL,
+		.persistent_cache_path = flutterpi.flutter.persistent_cache_path,
 		.is_persistent_cache_read_only = false,
 		.vsync_callback = on_frame_request,
 		.custom_dart_entrypoint = NULL,
@@ -2620,7 +2620,7 @@ static int init_user_input(void) {
 
 
 static bool setup_paths(void) {
-	char *kernel_blob_path, *icu_data_path, *app_elf_path;
+	char *kernel_blob_path, *icu_data_path, *app_elf_path, *persistent_cache_path;
 	#define PATH_EXISTS(path) (access((path),R_OK)==0)
 
 	if (!PATH_EXISTS(flutterpi.flutter.asset_bundle_path)) {
@@ -2649,9 +2649,16 @@ static bool setup_paths(void) {
 		return false;
 	}
 
+    asprintf(&persistent_cache_path, "/home/pi/dev/persistent_cache");
+    if (!PATH_EXISTS(persistent_cache_path)) {
+        fprintf(stderr, "[flutter-pi] Could not find \"/home/pi/dev/persistent_cache\".\n");
+        return false;
+    }
+
 	flutterpi.flutter.kernel_blob_path = kernel_blob_path;
 	flutterpi.flutter.icu_data_path = icu_data_path;
 	flutterpi.flutter.app_elf_path = app_elf_path;
+	flutterpi.flutter.persistent_cache_path = persistent_cache_path;
 
 	return true;
 
