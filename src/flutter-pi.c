@@ -1293,18 +1293,22 @@ static int init_display(void) {
 	// prefer higher refresh rates. After that, prefer progressive scanout modes.
 	mode = NULL;
 	for_each_mode_in_connector(connector, mode_iter) {
-		if (mode_iter->type & DRM_MODE_TYPE_PREFERRED) {
-			mode = mode_iter;
-			break;
-		} else if (mode == NULL) {
-			mode = mode_iter;
-		} else {
+//		if (mode_iter->type & DRM_MODE_TYPE_PREFERRED) {
+//			mode = mode_iter;
+//			break;
+//		} else if (mode == NULL) {
+//			mode = mode_iter;
+//		} else {
+		if (true) {
 			int area = mode_iter->hdisplay * mode_iter->vdisplay;
-			int old_area = mode->hdisplay * mode->vdisplay;
+			int old_area = 0;
+			if (mode != NULL) {
+                old_area = mode->hdisplay * mode->vdisplay;
+            }
 
-			if ((area > old_area) ||
-				((area == old_area) && (mode_iter->vrefresh > mode->vrefresh)) ||
-				((area == old_area) && (mode_iter->vrefresh == mode->vrefresh) && ((mode->flags & DRM_MODE_FLAG_INTERLACE) == 0))) {
+            if (/*(mode_iter->vrefresh == 60) && (mode_iter->vdisplay == 1080) ||*/
+				((mode_iter->vrefresh == 60) && (area > old_area)) ||
+				((mode_iter->vrefresh == 60) && (area == old_area) && ((mode->flags & DRM_MODE_FLAG_INTERLACE) == 0))) {
 				mode = mode_iter;
 			}
 		}
